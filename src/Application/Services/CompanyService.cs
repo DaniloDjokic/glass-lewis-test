@@ -1,6 +1,7 @@
 namespace Application.Services;
 
 using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces;
 
 public class CompanyService(ICompanyRepository companyRepository) : ICompanyService
@@ -20,20 +21,22 @@ public class CompanyService(ICompanyRepository companyRepository) : ICompanyServ
         return await companyRepository.GetCompanyByIsinAsync(isin);
     }
 
+    //TODO: Clean up this reused logic
+
     public async Task<int> CreateCompanyAsync(CreateCompanyDTO companyDto)
     {
         var isinExists = await companyRepository.DoesIsinExistAsync(companyDto.Isin);
 
         if (isinExists)
         {
-            throw new InvalidOperationException($"A company with ISIN {companyDto.Isin} already exists.");
+            throw new DuplicateIsinException(companyDto.Isin);
         }
 
         var isinFirstTwo = companyDto.Isin.Substring(0, 2).ToUpperInvariant();
 
         if (!isinFirstTwo.All(char.IsLetter))
         {
-            throw new ArgumentException("The first two characters of the ISIN must be letters.", nameof(companyDto.Isin));
+            throw new InvalidIsinException(companyDto.Isin);
         }
 
         return await companyRepository.CreateCompanyAsync(companyDto);
@@ -44,7 +47,7 @@ public class CompanyService(ICompanyRepository companyRepository) : ICompanyServ
         var company = await companyRepository.GetCompanyByIdAsync(id);
         if (company == null)
         {
-            throw new KeyNotFoundException($"Company with ID {id} not found.");
+            throw new CompanyNotFoundException(id);
         }
 
         if (updateCompanyDto.Isin != company.Isin)
@@ -53,13 +56,13 @@ public class CompanyService(ICompanyRepository companyRepository) : ICompanyServ
 
             if (isinExists)
             {
-                throw new InvalidOperationException($"A company with ISIN {updateCompanyDto.Isin} already exists.");
+                throw new DuplicateIsinException(updateCompanyDto.Isin);
             }
 
             var isinFirstTwo = updateCompanyDto.Isin.Substring(0, 2).ToUpperInvariant();
             if (!isinFirstTwo.All(char.IsLetter))
             {
-                throw new ArgumentException("The first two characters of the ISIN must be letters.", nameof(updateCompanyDto.Isin));
+                throw new InvalidIsinException(updateCompanyDto.Isin);
             }
         }
 

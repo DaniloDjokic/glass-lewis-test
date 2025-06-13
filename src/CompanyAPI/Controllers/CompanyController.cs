@@ -1,6 +1,7 @@
 using Application.Services;
 using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Application.Exceptions;
 
 namespace CompanyApi.Controllers;
 
@@ -51,8 +52,19 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
             throw new ArgumentNullException(nameof(createCompanyRequest));
         }
 
-        var companyId = await companyService.CreateCompanyAsync(createCompanyRequest);
-        return CreatedAtAction("GetCompanyById", new { id = companyId }, null);
+        try
+        {
+            var companyId = await companyService.CreateCompanyAsync(createCompanyRequest);
+            return CreatedAtAction("GetCompanyById", new { id = companyId }, null);
+        }
+        catch (DuplicateIsinException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+        catch (InvalidIsinException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPut]
@@ -64,9 +76,22 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
             throw new ArgumentNullException(nameof(updateCompanyRequest));
         }
 
-        //TODO: Add try catch with proper return types
-
-        await companyService.UpdateCompanyAsync(id, updateCompanyRequest);
-        return NoContent();
+        try
+        {
+            await companyService.UpdateCompanyAsync(id, updateCompanyRequest);
+            return NoContent();
+        }
+        catch (CompanyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (DuplicateIsinException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+        catch (InvalidIsinException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }
