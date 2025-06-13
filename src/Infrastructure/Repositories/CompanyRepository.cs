@@ -43,22 +43,19 @@ public class CompanyRepository(ApplicationDbContext dbContext) : ICompanyReposit
             .AnyAsync(c => c.Isin == isin);
     }
 
-    public async Task<int> CreateCompanyAsync(Company company)
+    public async Task<int> CreateCompanyAsync(CreateCompanyDTO companyDTO)
     {
+        var company = CreateCompanyDTO.ToEntity(companyDTO);
         dbContext.Companies.Add(company);
         await dbContext.SaveChangesAsync();
         return company.Id;
     }
 
-    public async Task UpdateCompanyAsync(int id, Company updatedCompany)
+    public async Task UpdateCompanyAsync(int id, UpdateCompanyDTO dto)
     {
         var company = await dbContext.Companies.FindAsync(id);
 
-        company!.Name = updatedCompany.Name;
-        company.Isin = updatedCompany.Isin;
-        company.Ticker = updatedCompany.Ticker;
-        company.Exchange = updatedCompany.Exchange;
-        company.WebsiteUrl = updatedCompany.WebsiteUrl;
+        company = dto.MapFromDto(company!);
 
         dbContext.Companies.Update(company);
         await dbContext.SaveChangesAsync();

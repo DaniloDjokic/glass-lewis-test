@@ -2,7 +2,6 @@ namespace Application.Services;
 
 using Application.DTOs;
 using Application.Interfaces;
-using Application.Requests;
 
 public class CompanyService(ICompanyRepository companyRepository) : ICompanyService
 {
@@ -21,7 +20,7 @@ public class CompanyService(ICompanyRepository companyRepository) : ICompanyServ
         return await companyRepository.GetCompanyByIsinAsync(isin);
     }
 
-    public async Task<int> CreateCompanyAsync(CreateCompanyRequest companyDto)
+    public async Task<int> CreateCompanyAsync(CreateCompanyDTO companyDto)
     {
         var isinExists = await companyRepository.DoesIsinExistAsync(companyDto.Isin);
 
@@ -37,12 +36,10 @@ public class CompanyService(ICompanyRepository companyRepository) : ICompanyServ
             throw new ArgumentException("The first two characters of the ISIN must be letters.", nameof(companyDto.Isin));
         }
 
-        var company = CreateCompanyRequest.ToEntity(companyDto);
-
-        return await companyRepository.CreateCompanyAsync(company);
+        return await companyRepository.CreateCompanyAsync(companyDto);
     }
 
-    public async Task UpdateCompanyAsync(int id, UpdateCompanyRequest updateCompanyRequest)
+    public async Task UpdateCompanyAsync(int id, UpdateCompanyDTO updateCompanyDto)
     {
         var company = await companyRepository.GetCompanyByIdAsync(id);
         if (company == null)
@@ -50,24 +47,22 @@ public class CompanyService(ICompanyRepository companyRepository) : ICompanyServ
             throw new KeyNotFoundException($"Company with ID {id} not found.");
         }
 
-        if (updateCompanyRequest.Isin != company.Isin)
+        if (updateCompanyDto.Isin != company.Isin)
         {
-            var isinExists = await companyRepository.DoesIsinExistAsync(updateCompanyRequest.Isin);
+            var isinExists = await companyRepository.DoesIsinExistAsync(updateCompanyDto.Isin);
 
             if (isinExists)
             {
-                throw new InvalidOperationException($"A company with ISIN {updateCompanyRequest.Isin} already exists.");
+                throw new InvalidOperationException($"A company with ISIN {updateCompanyDto.Isin} already exists.");
             }
 
-            var isinFirstTwo = updateCompanyRequest.Isin.Substring(0, 2).ToUpperInvariant();
+            var isinFirstTwo = updateCompanyDto.Isin.Substring(0, 2).ToUpperInvariant();
             if (!isinFirstTwo.All(char.IsLetter))
             {
-                throw new ArgumentException("The first two characters of the ISIN must be letters.", nameof(updateCompanyRequest.Isin));
+                throw new ArgumentException("The first two characters of the ISIN must be letters.", nameof(updateCompanyDto.Isin));
             }
         }
 
-        var updatedCompany = UpdateCompanyRequest.MapFromRequest(updateCompanyRequest);
-
-        await companyRepository.UpdateCompanyAsync(id, updatedCompany);
+        await companyRepository.UpdateCompanyAsync(id, updateCompanyDto);
     }
 }

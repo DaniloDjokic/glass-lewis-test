@@ -19,5 +19,4 @@ public record CompanyDTO(
             company.Isin,
             company.WebsiteUrl
     );
-
 }

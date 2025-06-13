@@ -1,5 +1,5 @@
 using Application.Services;
-using Application.Requests;
+using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyApi.Controllers;
@@ -44,7 +44,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCompanyAsync([FromBody] CreateCompanyRequest? createCompanyRequest)
+    public async Task<IActionResult> CreateCompanyAsync([FromBody] CreateCompanyDTO? createCompanyRequest)
     {
         if (createCompanyRequest == null)
         {
@@ -57,7 +57,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
 
     [HttpPut]
     [Route("{id}")]
-    public async Task<IActionResult> UpdateCompanyAsync(int id, [FromBody] UpdateCompanyRequest? updateCompanyRequest)
+    public async Task<IActionResult> UpdateCompanyAsync(int id, [FromBody] UpdateCompanyDTO? updateCompanyRequest)
     {
         if (updateCompanyRequest == null)
         {

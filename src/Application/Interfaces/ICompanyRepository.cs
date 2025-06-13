@@ -44,11 +44,11 @@ public interface ICompanyRepository
     /// </summary>
     /// <param name="company">The company to create.</param>
     /// <returns>The ID of the created company.</returns>
-    Task<int> CreateCompanyAsync(Company company);
+    Task<int> CreateCompanyAsync(CreateCompanyDTO company);
 
     /// <summary>
     /// Updates an existing company in the repository.
     /// </summary>
     /// <param name="company">The company to update.</param>
-	Task UpdateCompanyAsync(int id, Company updatedCompany);
+	Task UpdateCompanyAsync(int id, UpdateCompanyDTO updateCompanyDTO);
 }

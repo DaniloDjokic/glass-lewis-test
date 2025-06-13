@@ -1,8 +1,8 @@
 using Domain.Entities;
 
-namespace Application.Requests;
+namespace Application.DTOs;
 
-public record CreateCompanyRequest(
+public record CreateCompanyDTO(
     string Name,
     string Exchange,
     string Ticker,
@@ -11,7 +11,7 @@ public record CreateCompanyRequest(
 )
 {
 
-    public static Company ToEntity(CreateCompanyRequest request) => new Company
+    public static Company ToEntity(CreateCompanyDTO request) => new Company
     {
         Name = request.Name,
         Exchange = request.Exchange,

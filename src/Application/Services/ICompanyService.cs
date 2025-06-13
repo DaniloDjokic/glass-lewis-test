@@ -1,5 +1,4 @@
 using Application.DTOs;
-using Application.Requests;
 
 namespace Application.Services;
 
@@ -30,12 +29,12 @@ public interface ICompanyService
     /// </summary>
     /// <param name="createCompanyRequest">The request containing the company data</param>
     /// <returns>The created company Id</returns>
-	Task<int> CreateCompanyAsync(CreateCompanyRequest createCompanyRequest);
+	Task<int> CreateCompanyAsync(CreateCompanyDTO createCompanyDto);
 
 
     /// <summary>
     /// Updates an existing company.
     /// </summary>
     /// <param name="updateCompanyRequest">The request containing the company data</param>
-	Task UpdateCompanyAsync(int id, UpdateCompanyRequest updateCompanyRequest);
+	Task UpdateCompanyAsync(int id, UpdateCompanyDTO updateCompanyDto);
 }
