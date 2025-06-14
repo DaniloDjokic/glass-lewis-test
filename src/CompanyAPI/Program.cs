@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,22 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+    }
+
+    Log.Information("Database migration completed successfully.");
+}
+catch (System.Exception)
+{
+    Log.Error("An error occurred during database migration.");
+}
+
 
 app.UseExceptionHandler(err =>
 {

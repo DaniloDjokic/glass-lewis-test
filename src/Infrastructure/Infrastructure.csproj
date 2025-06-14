@@ -22,4 +22,9 @@
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+	<EmbeddedResource Include="Migrations\**\*.cs" />
+  </ItemGroup>
+
+
 </Project>
