@@ -54,7 +54,7 @@ public class CompanyRepository(ApplicationDbContext dbContext) : ICompanyReposit
     {
         var company = await dbContext.Companies.FindAsync(id);
 
-        company = dto.MapFromDto(company!);
+        company = UpdateCompanyDTO.ToEntity(dto);
 
         dbContext.Companies.Update(company);
         await dbContext.SaveChangesAsync();

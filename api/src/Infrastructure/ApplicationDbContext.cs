@@ -15,6 +15,10 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Company>()
+            .HasIndex(c => c.Isin)
+            .IsUnique();
+
+        modelBuilder.Entity<Company>()
         .HasData(
             new Company
             {

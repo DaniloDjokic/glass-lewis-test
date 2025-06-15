@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Tests.Integration;
 
+[Trait("Category", "Integration")]
 public class CompanyRepositoryTests : IntegrationTestBase<ApplicationDbContext>
 {
     private readonly ICompanyRepository _companyRepository;

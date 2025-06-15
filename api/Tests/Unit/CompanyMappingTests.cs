@@ -3,6 +3,7 @@ using Domain.Entities;
 
 namespace Tests.Unit;
 
+[Trait("Category", "Unit")]
 public class CompanyMappingTests
 {
     [Fact]
@@ -61,7 +62,6 @@ public class CompanyMappingTests
 
         var company = new Company
         {
-
             Name = "Updated Company",
             Exchange = "NASDAQ",
             Ticker = "UPDT",
@@ -69,7 +69,7 @@ public class CompanyMappingTests
             WebsiteUrl = "https://www.updatedcompany.com"
         };
 
-        var mappedCompany = updateCompanyDto.MapFromDto(company);
+        var mappedCompany = UpdateCompanyDTO.ToEntity(updateCompanyDto);
 
         Assert.Equal(updateCompanyDto.Name, company.Name);
         Assert.Equal(updateCompanyDto.Exchange, company.Exchange);

@@ -4,6 +4,7 @@ using Application.DTOs;
 using Application.Exceptions;
 using Application.Services;
 
+[Trait("Category", "Unit")]
 public class CompanyServiceTests
 {
     [Fact]

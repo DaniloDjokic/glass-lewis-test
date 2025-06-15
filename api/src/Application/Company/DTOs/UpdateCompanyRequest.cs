@@ -10,14 +10,12 @@ public record UpdateCompanyDTO(
     string? WebsiteUrl
 )
 {
-    public Company MapFromDto(Company companyToUpdate)
+    public static Company ToEntity(UpdateCompanyDTO dto) => new Company
     {
-        companyToUpdate.Name = Name;
-        companyToUpdate.Exchange = Exchange;
-        companyToUpdate.Ticker = Ticker;
-        companyToUpdate.Isin = Isin;
-        companyToUpdate.WebsiteUrl = WebsiteUrl;
-
-        return companyToUpdate;
-    }
+        Name = dto.Name,
+        Exchange = dto.Exchange,
+        Ticker = dto.Ticker,
+        Isin = dto.Isin,
+        WebsiteUrl = dto.WebsiteUrl
+    };
 }
