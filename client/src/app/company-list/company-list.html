@@ -8,6 +8,51 @@
     </button>
   </mat-toolbar>
 
+  <!-- Search Section -->
+  <mat-card class="search-card">
+    <mat-card-header>
+      <mat-card-title>Search Companies</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="search-form">
+        <div class="search-row">
+          <mat-form-field appearance="outline" class="search-type-field">
+            <mat-label>Search by</mat-label>
+            <mat-select [(value)]="searchType">
+              <mat-option value="all">All Fields</mat-option>
+              <mat-option value="id">ID</mat-option>
+              <mat-option value="isin">ISIN</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="search-input-field">
+            <mat-label>
+              <span *ngIf="searchType === 'id'">Enter Company ID</span>
+              <span *ngIf="searchType === 'isin'">Enter ISIN</span>
+              <span *ngIf="searchType === 'all'">Search companies...</span>
+            </mat-label>
+            <input matInput
+                   [(ngModel)]="searchValue"
+                   (keyup.enter)="onSearch()">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <div class="search-actions">
+            <button mat-raised-button color="primary" (click)="onSearch()" [disabled]="!searchValue.trim()">
+              <mat-icon>search</mat-icon>
+              Search
+            </button>
+            <button mat-button (click)="onClearSearch()" *ngIf="searchValue || showSearchResults">
+              <mat-icon>clear</mat-icon>
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Add/Edit Form -->
   <mat-card *ngIf="showForm" class="form-card">
     <mat-card-header>
       <mat-card-title>{{ isEditing ? 'Edit Company' : 'Add New Company' }}</mat-card-title>
@@ -44,7 +89,7 @@
                    maxlength="12">
             <mat-error *ngIf="companyForm.controls['isin']?.invalid && companyForm.controls['isin']?.touched">
               <span *ngIf="companyForm.controls['isin']?.errors?.['required']">ISIN is required</span>
-              <span *ngIf="companyForm.controls['isin']?.errors?.['pattern']">ISIN must begin with 2 alpabetial characters</span>
+              <span *ngIf="companyForm.controls['isin']?.errors?.['pattern']">ISIN must begin with 2 alphabetical characters</span>
             </mat-error>
           </mat-form-field>
 
@@ -64,12 +109,32 @@
     </mat-card-content>
   </mat-card>
 
+  <!-- Results Table -->
   <mat-card class="table-card">
     <mat-card-header>
-      <mat-card-title>Companies</mat-card-title>
+      <mat-card-title>
+        <span *ngIf="!showSearchResults">All Companies ({{ companies.length }})</span>
+        <span *ngIf="showSearchResults">Search Results ({{ filteredCompanies.length }})</span>
+      </mat-card-title>
+      <div class="table-actions" *ngIf="showSearchResults">
+        <button mat-button color="primary" (click)="getCompanies()">
+          <mat-icon>list</mat-icon>
+          Show All Companies
+        </button>
+      </div>
     </mat-card-header>
     <mat-card-content>
-      <table mat-table [dataSource]="companies" class="mat-elevation-z8">
+      <div *ngIf="filteredCompanies.length === 0 && !showSearchResults" class="no-data">
+        <mat-icon>business</mat-icon>
+        <p>No companies found. Add a new company to get started.</p>
+      </div>
+
+      <div *ngIf="filteredCompanies.length === 0 && showSearchResults" class="no-data">
+        <mat-icon>search_off</mat-icon>
+        <p>No companies found matching your search criteria.</p>
+      </div>
+
+      <table mat-table [dataSource]="filteredCompanies" class="mat-elevation-z8" *ngIf="filteredCompanies.length > 0">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>ID</th>
           <td mat-cell *matCellDef="let company">{{ company.id }}</td>
@@ -108,7 +173,7 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let company">
-            <button mat-icon-button color="primary" (click)="onEdit(company)">
+            <button mat-icon-button color="primary" (click)="onEdit(company)" [title]="'Edit ' + company.name">
               <mat-icon>edit</mat-icon>
             </button>
           </td>

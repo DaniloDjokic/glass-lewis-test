@@ -24,7 +24,7 @@ export class CompanyService {
   }
 
   getCompanyByIsin(isin: string): Observable<Company> {
-    const url = `${this.apiUrl}/${isin}`;
+    const url = `${this.apiUrl}/isin/${isin}`;
     return this.http.get<Company>(url);
   }
 
