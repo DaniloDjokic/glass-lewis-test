@@ -1,6 +1,8 @@
 services:
   api:
-    image: companyapi:latest
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -11,6 +13,17 @@ services:
         condition: service_healthy
     networks:
       - app-network
+
+  frontend:
+    build:
+      context: ./client  
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    networks:
+      - app-network
+    depends_on:
+      - api
 
   db:
     image: postgres:latest

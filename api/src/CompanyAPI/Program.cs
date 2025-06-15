@@ -22,14 +22,14 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(builder.Configuration["ClientUrl"] ?? throw new InvalidOperationException("ClientUrl is not configured."))
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
         });
 });
 
 var app = builder.Build();
 
-// CORS must be called early in the pipeline, before other middleware
 app.UseCors("AllowAngularApp");
 
 if (app.Environment.IsDevelopment())
@@ -68,7 +68,7 @@ app.UseExceptionHandler(err =>
     });
 });
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();

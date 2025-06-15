@@ -7,7 +7,7 @@ import { Company } from '../models.company';
   providedIn: 'root'
 })
 export class CompanyService {
-  private apiUrl = 'http://localhost:5202/api/companies';
+  private apiUrl = 'http://localhost:8080/api/companies';
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
