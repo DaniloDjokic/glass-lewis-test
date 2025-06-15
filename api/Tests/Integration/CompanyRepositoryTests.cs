@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Repositories;
 using Domain.Entities;
 using Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tests.Integration;
 
@@ -70,12 +71,67 @@ public class CompanyRepositoryTests : IntegrationTestBase<ApplicationDbContext>
     }
 
     [Fact]
+    public async Task GetByIsin_ExistingCompany_ReturnsCompany()
+    {
+        var existingCompany = DbContext.Companies.First();
+
+        var result = await _companyRepository.GetCompanyByIsinAsync(existingCompany.Isin);
+
+        Assert.NotNull(result);
+        Assert.Equal(existingCompany.Isin, result.Isin);
+    }
+
+    [Fact]
+    public async Task GetByIsin_NonExistentCompany_ReturnsNull()
+    {
+        var result = await _companyRepository.GetCompanyByIsinAsync("INVALID_ISIN");
+
+        Assert.Null(result);
+    }
+
+    [Fact]
     public async Task GetAllCompanies_ReturnsAllCompanies()
     {
         var result = await _companyRepository.GetAllCompaniesAsync();
 
         Assert.NotNull(result);
         Assert.Equal(3, result.Count);
+    }
+
+    [Fact]
+    public async Task DoesCompanyExist_ExistingCompany_ReturnsTrue()
+    {
+        var existingCompany = DbContext.Companies.First();
+
+        var result = await _companyRepository.CompanyExistsAsync(existingCompany.Id);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task DoesCompanyExist_NonExistentCompany_ReturnsFalse()
+    {
+        var result = await _companyRepository.CompanyExistsAsync(999);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task DoesIsinExist_ExistingIsin_ReturnsTrue()
+    {
+        var existingCompany = DbContext.Companies.First();
+
+        var result = await _companyRepository.DoesIsinExistAsync(existingCompany.Isin);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task DoesIsinExist_NonExistentIsin_ReturnsFalse()
+    {
+        var result = await _companyRepository.DoesIsinExistAsync("INVALID_ISIN");
+
+        Assert.False(result);
     }
 
     [Fact]
@@ -93,5 +149,41 @@ public class CompanyRepositoryTests : IntegrationTestBase<ApplicationDbContext>
         await DbContext.SaveChangesAsync();
 
         var addedCompany = await _companyRepository.GetCompanyByIdAsync(id);
+    }
+
+    [Fact]
+    public async Task AddCompany_CompanyWithExistingIsin_ThrowsException()
+    {
+        var existingCompany = DbContext.Companies.First();
+
+        var newCompany = new Application.DTOs.CreateCompanyDTO(
+            Name: "Duplicate Company",
+            Exchange: "NASDAQ",
+            Ticker: "DUPC",
+            Isin: existingCompany.Isin, // Using existing ISIN
+            WebsiteUrl: "https://www.duplicate.com"
+        );
+
+        await Assert.ThrowsAsync<DbUpdateException>(() => _companyRepository.CreateCompanyAsync(newCompany));
+    }
+
+    [Fact]
+    public async Task UpdateCompany_ValidCompany_UpdatesCompany()
+    {
+        var existingCompany = DbContext.Companies.First();
+        existingCompany.Name = "Updated Company Name";
+        var existingCompanyDto = new Application.DTOs.UpdateCompanyDTO(
+            Name: existingCompany.Name,
+            Exchange: existingCompany.Exchange,
+            Ticker: existingCompany.Ticker,
+            Isin: existingCompany.Isin,
+            WebsiteUrl: existingCompany.WebsiteUrl
+        );
+
+        await _companyRepository.UpdateCompanyAsync(existingCompany.Id, existingCompanyDto);
+        await DbContext.SaveChangesAsync();
+
+        var updatedCompany = await _companyRepository.GetCompanyByIdAsync(existingCompany.Id);
+        Assert.Equal("Updated Company Name", existingCompanyDto.Name);
     }
 }
