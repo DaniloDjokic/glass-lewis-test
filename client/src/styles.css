@@ -1,5 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
-
 html,
 body {
   height: 100%;
@@ -11,7 +9,6 @@ body {
   background-color: #f5f5f5;
 }
 
-/* Custom Material Theme Overrides */
 .mat-mdc-raised-button.mat-accent {
   --mdc-protected-button-container-color: #ff4081;
   --mdc-protected-button-label-text-color: white;
@@ -19,4 +16,26 @@ body {
 
 .mat-mdc-raised-button.mat-accent:hover {
   --mdc-protected-button-container-color: #e91e63;
+}
+
+.success-snackbar {
+  --mdc-snackbar-container-color: #4caf50 !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mat-mdc-snack-bar-button-color: white !important;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #f44336 !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mat-mdc-snack-bar-button-color: white !important;
+}
+
+.success-snackbar .mat-mdc-snack-bar-surface {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar .mat-mdc-snack-bar-surface {
+  background-color: #f44336 !important;
+  color: white !important;
 }
