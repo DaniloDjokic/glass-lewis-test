@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Custom Material Theme Overrides */
+.mat-mdc-raised-button.mat-accent {
+  --mdc-protected-button-container-color: #ff4081;
+  --mdc-protected-button-label-text-color: white;
+}
+
+.mat-mdc-raised-button.mat-accent:hover {
+  --mdc-protected-button-container-color: #e91e63;
+}

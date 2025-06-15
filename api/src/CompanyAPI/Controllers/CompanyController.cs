@@ -2,6 +2,7 @@ using Application.Services;
 using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Application.Exceptions;
+using Serilog;
 
 namespace CompanyApi.Controllers;
 
@@ -24,6 +25,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
 
         if (company == null)
         {
+            Log.Information("Company with ID {Id} not found", id);
             return NotFound();
         }
 
@@ -38,6 +40,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
 
         if (company == null)
         {
+            Log.Information("Company with Isin {isin} not found", isin);
             return NotFound();
         }
 
@@ -49,6 +52,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         if (createCompanyRequest == null)
         {
+            Log.Information("CreateCompany request is null");
             throw new ArgumentNullException(nameof(createCompanyRequest));
         }
 
@@ -59,10 +63,12 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         }
         catch (DuplicateIsinException ex)
         {
+            Log.Information("Duplicate Isin error: {Message}", ex.Message);
             return Conflict(new { message = ex.Message });
         }
         catch (InvalidIsinException ex)
         {
+            Log.Information("Invalid Isin error: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message });
         }
     }
@@ -73,6 +79,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         if (updateCompanyRequest == null)
         {
+            Log.Information("UpdateCompany request is null for ID {Id}", id);
             throw new ArgumentNullException(nameof(updateCompanyRequest));
         }
 
@@ -83,14 +90,17 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         }
         catch (CompanyNotFoundException ex)
         {
+            Log.Information("Company with ID {Id} not found for update: {Message}", id, ex.Message);
             return NotFound(ex.Message);
         }
         catch (DuplicateIsinException ex)
         {
+            Log.Information("Duplicate Isin error during update: {Message}", ex.Message);
             return Conflict(new { message = ex.Message });
         }
         catch (InvalidIsinException ex)
         {
+            Log.Information("Invalid Isin error during update: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message });
         }
     }
