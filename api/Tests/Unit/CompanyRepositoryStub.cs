@@ -1,4 +1,4 @@
-namespace Tests.Stubs;
+namespace Tests.Unit;
 
 using Application.DTOs;
 using Application.Interfaces;
@@ -14,7 +14,7 @@ public class CompanyRepositoryStub : ICompanyRepository
 
     public IEnumerable<CompanyDTO> Companies => _companies;
 
-    public Task<IEnumerable<CompanyDTO>> GetAllCompaniesAsync() => Task.FromResult<IEnumerable<CompanyDTO>>(_companies);
+    public Task<IReadOnlyCollection<CompanyDTO>> GetAllCompaniesAsync() => Task.FromResult<IReadOnlyCollection<CompanyDTO>>(_companies);
 
     public Task<CompanyDTO?> GetCompanyByIdAsync(int id) => Task.FromResult(_companies.FirstOrDefault(c => c.Id == id));
 

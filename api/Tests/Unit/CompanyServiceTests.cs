@@ -1,11 +1,10 @@
-﻿namespace Tests;
+﻿namespace Tests.Unit;
 
 using Application.DTOs;
 using Application.Exceptions;
 using Application.Services;
-using Tests.Stubs;
 
-public class CompanyServiceTest
+public class CompanyServiceTests
 {
     [Fact]
     public async Task GetCompanies_ReturnsListOfCompanies()

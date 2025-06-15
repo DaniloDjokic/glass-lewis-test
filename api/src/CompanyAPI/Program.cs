@@ -10,6 +10,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 

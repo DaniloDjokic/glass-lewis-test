@@ -8,7 +8,7 @@ public interface ICompanyRepository
     /// Retrieves all companies from the repository.
     /// </summary>
     /// <returns>A collection of companies.</returns>
-    Task<IEnumerable<CompanyDTO>> GetAllCompaniesAsync();
+    Task<IReadOnlyCollection<CompanyDTO>> GetAllCompaniesAsync();
 
     /// <summary>
     /// Retrieves a company by its ID.

@@ -7,7 +7,7 @@ namespace Application.Repositories;
 
 public class CompanyRepository(ApplicationDbContext dbContext) : ICompanyRepository
 {
-    public async Task<IEnumerable<CompanyDTO>> GetAllCompaniesAsync()
+    public async Task<IReadOnlyCollection<CompanyDTO>> GetAllCompaniesAsync()
     {
         return await dbContext.Companies
             .Select(c => CompanyDTO.FromEntity(c))
