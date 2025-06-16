@@ -1,4 +1,5 @@
 using Application;
+using CompanyApi;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -11,8 +12,11 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+AuthenticationExtensions.AddJwtAuthentication(builder.Services, builder.Configuration, builder.Environment);
 
 ApplicationServiceExtensions.ConfigureServices(builder.Services);
 InfrastructureServiceExtensions.ConfigureServices(builder.Services, builder.Configuration);
@@ -78,4 +82,4 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program {}
+public partial class Program { }

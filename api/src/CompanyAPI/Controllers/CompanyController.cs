@@ -3,12 +3,14 @@ using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Application.Exceptions;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CompanyApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/companies")]
-public class CompanyController(ICompanyService companyService) : ControllerBase
+public class CompanyController(ICompanyService companyService, ILogger<CompanyController> logger) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetCompaniesAsync()
@@ -40,7 +42,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
 
         if (company is null)
         {
-            Log.Information("Company with Isin {isin} not found", isin);
+            logger.LogInformation("Company with Isin {isin} not found", isin);
             return NotFound();
         }
 
@@ -52,7 +54,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         if (createCompanyRequest is null)
         {
-            Log.Information("CreateCompany request is null");
+            logger.LogInformation("CreateCompany request is null");
             return BadRequest("Request body cannot be null");
         }
 
@@ -63,17 +65,17 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         }
         catch (DuplicateIsinException ex)
         {
-            Log.Information("Duplicate Isin error: {Message}", ex.Message);
+            logger.LogInformation("Duplicate Isin error: {Message}", ex.Message);
             return Conflict(new { message = ex.Message });
         }
         catch (InvalidIsinException ex)
         {
-            Log.Information("Invalid Isin error: {Message}", ex.Message);
+            logger.LogInformation("Invalid Isin error: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message });
         }
         catch (ValidationException ex)
         {
-            Log.Information("Validation error during update: {Message}", ex.Message);
+            logger.LogInformation("Validation error during update: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message, Errors = ex.Errors });
         }
     }
@@ -84,7 +86,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         if (updateCompanyRequest is null)
         {
-            Log.Information("UpdateCompany request is null for ID {Id}", id);
+            logger.LogInformation("UpdateCompany request is null for ID {Id}", id);
             return BadRequest("Request body cannot be null");
         }
 
@@ -95,22 +97,22 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         }
         catch (CompanyNotFoundException ex)
         {
-            Log.Information("Company with ID {Id} not found for update: {Message}", id, ex.Message);
+            logger.LogInformation("Company with ID {Id} not found for update: {Message}", id, ex.Message);
             return NotFound(ex.Message);
         }
         catch (DuplicateIsinException ex)
         {
-            Log.Information("Duplicate Isin error during update: {Message}", ex.Message);
+            logger.LogInformation("Duplicate Isin error during update: {Message}", ex.Message);
             return Conflict(new { message = ex.Message });
         }
         catch (InvalidIsinException ex)
         {
-            Log.Information("Invalid Isin error during update: {Message}", ex.Message);
+            logger.LogInformation("Invalid Isin error during update: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message });
         }
         catch (ValidationException ex)
         {
-            Log.Information("Validation error during update: {Message}", ex.Message);
+            logger.LogInformation("Validation error during update: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message, Errors = ex.Errors });
         }
     }

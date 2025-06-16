@@ -51,11 +51,10 @@ public static class AuthServerInitializer
             userDbContext.Database.Migrate();
 
             var authScope = configuration["auth:Scope"] ?? throw new ArgumentNullException("Scope is not set");
+            var clientSecret = configuration["auth:ClientSecret"] ?? throw new ArgumentNullException("ClientSecret is not set");
 
             if (!configDbContext.Clients.Any())
             {
-                var clientSecret = configuration["auth:ClientSecret"] ?? throw new ArgumentNullException("ClientSecret is not set");
-
                 var client = new Client
                 {
                     ClientId = configuration["auth:ClientId"] ?? throw new ArgumentNullException("ClientId is not set"),
@@ -70,7 +69,11 @@ public static class AuthServerInitializer
 
             if (!configDbContext.ApiResources.Any())
             {
-                var apiResource = new ApiResource(authScope, "glass-lewis-api");
+                var apiResource = new ApiResource(authScope, "Glass Lewis API")
+                {
+                    Scopes = { authScope },
+                    // ApiSecrets = { new Secret(clientSecret.Sha256()) } // Optional: API secret for introspection
+                };
                 configDbContext.ApiResources.Add(apiResource.ToEntity());
                 configDbContext.SaveChanges();
             }

@@ -8,5 +8,6 @@ public static class ApplicationServiceExtensions
     public static void ConfigureServices(IServiceCollection services)
     {
         services.AddTransient<ICompanyService, CompanyService>();
+        services.AddTransient<IAuthService, AuthService>();
     }
 }
