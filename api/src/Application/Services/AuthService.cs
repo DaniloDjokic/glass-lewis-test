@@ -1,29 +1,30 @@
 using Application.Common;
 using Application.DTOs;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
 
-public class AuthService(IHttpClientFactory httpClientFactory, ILogger<AuthService> logger) : IAuthService
+public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<AuthService> logger) : IAuthService
 {
     public async Task<UserLoginResponseDTO> LoginAsync(UserLoginRequestDTO loginRequest)
     {
         logger.LogInformation("Attempting to log in user: {Username}", loginRequest.Username);
 
-        // TODO: Move to config
-        var identityServerUrl = "http://localhost:5272/connect/token";
+        var identityServerUrl = configuration["IdentityServer:Authority"] ?? throw new InvalidOperationException("IdentityServer URL is not configured.");
+
+        var tokenUrl = $"{identityServerUrl}/connect/token";
 
         var request = new HttpRequestMessage(HttpMethod.Post, identityServerUrl)
         {
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-			// TODO: Move to config
-                { "grant_type", "password" },
+                { "grant_type", configuration["IdentityServer:GrantType"] ?? throw new InvalidOperationException("Grant type is not configured.") },
                 { "username", loginRequest.Username },
                 { "password", loginRequest.Password },
-                { "client_id", "glass-lewis-api-client" },
-                { "client_secret", "very-secure-development-secret" },
-                { "scope", "api" }
+                { "client_id", configuration["IdentityServer:ClientId"] ?? throw new InvalidOperationException("Client ID is not configured.") },
+                { "client_secret", configuration["IdentityServer:ClientSecret"] ?? throw new InvalidOperationException("Client secret is not configured.") },
+                { "scope", configuration["IdentityServer:Scope"] ?? throw new InvalidOperationException("Scope is not configured.") }
             })
         };
 
