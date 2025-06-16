@@ -15,7 +15,7 @@ RUN dotnet restore
 
 COPY <<EOF /entrypoint.sh
 #!/bin/bash
-exec dotnet test --no-restore --verbosity normal  "\$@"
+exec dotnet test --no-restore --verbosity minimal  "\$@"
 EOF
 
 RUN chmod +x /entrypoint.sh

@@ -17,21 +17,27 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-AuthenticationExtensions.AddJwtAuthentication(builder.Services, builder.Configuration, builder.Environment);
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    AuthenticationExtensions.AddJwtAuthentication(builder.Services, builder.Configuration, builder.Environment);
+}
 
 ApplicationServiceExtensions.ConfigureServices(builder.Services);
 InfrastructureServiceExtensions.ConfigureServices(builder.Services, builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp",
-        policy =>
-        {
-            policy.WithOrigins(builder.Configuration["ClientUrl"] ?? throw new InvalidOperationException("ClientUrl is not configured."))
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowCredentials();
-        });
+    if (!builder.Environment.IsEnvironment("Testing"))
+    {
+        options.AddPolicy("AllowAngularApp",
+            policy =>
+            {
+                policy.WithOrigins(builder.Configuration["ClientUrl"] ?? throw new InvalidOperationException("ClientUrl is not configured."))
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+            });
+    }
 });
 
 var app = builder.Build();
