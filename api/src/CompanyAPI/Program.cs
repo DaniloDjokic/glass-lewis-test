@@ -1,6 +1,7 @@
 using Application;
 using CompanyApi;
 using Infrastructure;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -69,6 +70,8 @@ app.UseExceptionHandler(err =>
             status = 500,
             detail = "An internal server error has occurred."
         };
+
+        Log.Error("An unhandled exception occurred: {Message}", context.Features.Get<IExceptionHandlerFeature>()?.Error.Message);
         await context.Response.WriteAsJsonAsync(problemDetails);
     });
 });

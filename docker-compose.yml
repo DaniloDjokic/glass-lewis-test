@@ -8,9 +8,35 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=companydb;Username=postgres;Password=yourpassword123
+      - IdentityServer__Authority=http://auth:8080
+      - ClientUrl=http://frontend:80
     depends_on:
       db:
         condition: service_healthy
+      auth:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports: 
+      - "8083:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=companydb;Username=postgres;Password=yourpassword123
+      - Auth__IssuerUri=http://auth:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     networks:
       - app-network
 
@@ -23,7 +49,8 @@ services:
     networks:
       - app-network
     depends_on:
-      - api
+      api:
+        condition: service_started
 
   db:
     image: postgres:latest

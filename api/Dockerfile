@@ -7,7 +7,7 @@ COPY src/CompanyAPI/*.csproj src/CompanyAPI/
 COPY src/Domain/*.csproj src/Domain/
 COPY src/Application/*.csproj src/Application/
 COPY src/Infrastructure/*.csproj src/Infrastructure/
-COPY tests/*.csproj tests/
+COPY Tests/*.csproj Tests/
 
 RUN dotnet restore
 

@@ -13,7 +13,10 @@ public static class AuthServerInitializer
         services.AddDbContext<UserDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddIdentityServer()
+        services.AddIdentityServer(options =>
+            {
+                options.IssuerUri = configuration["Auth:IssuerUri"] ?? throw new ArgumentNullException("IssuerUri is not set");
+            })
             .AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = b =>
@@ -72,7 +75,6 @@ public static class AuthServerInitializer
                 var apiResource = new ApiResource(authScope, "Glass Lewis API")
                 {
                     Scopes = { authScope },
-                    // ApiSecrets = { new Secret(clientSecret.Sha256()) } // Optional: API secret for introspection
                 };
                 configDbContext.ApiResources.Add(apiResource.ToEntity());
                 configDbContext.SaveChanges();
