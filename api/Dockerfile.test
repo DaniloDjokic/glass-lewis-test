@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0
+WORKDIR /app
+
+COPY *.sln .
+COPY src/CompanyAPI/*.csproj src/CompanyAPI/
+COPY src/Domain/*.csproj src/Domain/
+COPY src/Application/*.csproj src/Application/
+COPY src/Infrastructure/*.csproj src/Infrastructure/
+COPY Tests/*.csproj Tests/
+
+COPY src/ src/
+COPY Tests/ Tests/
+
+RUN dotnet restore
+
+COPY <<EOF /entrypoint.sh
+#!/bin/bash
+exec dotnet test --no-restore --verbosity normal  "\$@"
+EOF
+
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
