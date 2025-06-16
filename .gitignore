@@ -485,3 +485,46 @@ $RECYCLE.BIN/
 
 # Nvim directory
 .nvim/
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Angular build output
+/dist/
+/out-tsc/
+/.angular/
+/.angular-cache/
+/coverage/
+/tmp/
+/temp/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*.local
+
+# Compiled output
+*.js
+*.js.map
+*.tsbuildinfo
+
+# Misc
+.sass-cache/
+connect.lock
+typings/
+jspm_packages/
+bower_components/

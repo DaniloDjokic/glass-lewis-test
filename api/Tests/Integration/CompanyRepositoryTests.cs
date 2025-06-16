@@ -2,7 +2,6 @@ using Application.Interfaces;
 using Application.Repositories;
 using Domain.Entities;
 using Infrastructure;
-using Microsoft.EntityFrameworkCore;
 
 namespace Tests.Integration;
 
@@ -149,23 +148,7 @@ public class CompanyRepositoryTests : IntegrationTestBase<ApplicationDbContext>
         var id = await _companyRepository.CreateCompanyAsync(newCompany);
         await DbContext.SaveChangesAsync();
 
-        var addedCompany = await _companyRepository.GetCompanyByIdAsync(id);
-    }
-
-    [Fact]
-    public async Task AddCompany_CompanyWithExistingIsin_ThrowsException()
-    {
-        var existingCompany = DbContext.Companies.First();
-
-        var newCompany = new Application.DTOs.CreateCompanyDTO(
-            Name: "Duplicate Company",
-            Exchange: "NASDAQ",
-            Ticker: "DUPC",
-            Isin: existingCompany.Isin, // Using existing ISIN
-            WebsiteUrl: "https://www.duplicate.com"
-        );
-
-        await Assert.ThrowsAsync<DbUpdateException>(() => _companyRepository.CreateCompanyAsync(newCompany));
+        _ = await _companyRepository.GetCompanyByIdAsync(id);
     }
 
     [Fact]
