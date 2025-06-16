@@ -528,3 +528,5 @@ connect.lock
 typings/
 jspm_packages/
 bower_components/
+
+tempkey.jwk
