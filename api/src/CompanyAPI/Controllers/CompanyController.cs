@@ -23,7 +23,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         var company = await companyService.GetCompanyByIdAsync(id);
 
-        if (company == null)
+        if (company is null)
         {
             Log.Information("Company with ID {Id} not found", id);
             return NotFound();
@@ -38,7 +38,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         var company = await companyService.GetCompanyByIsinAsync(isin);
 
-        if (company == null)
+        if (company is null)
         {
             Log.Information("Company with Isin {isin} not found", isin);
             return NotFound();
@@ -50,7 +50,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCompanyAsync([FromBody] CreateCompanyDTO? createCompanyRequest)
     {
-        if (createCompanyRequest == null)
+        if (createCompanyRequest is null)
         {
             Log.Information("CreateCompany request is null");
             return BadRequest("Request body cannot be null");
@@ -71,13 +71,18 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
             Log.Information("Invalid Isin error: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message });
         }
+        catch (ValidationException ex)
+        {
+            Log.Information("Validation error during update: {Message}", ex.Message);
+            return BadRequest(new { message = ex.Message, Errors = ex.Errors });
+        }
     }
 
     [HttpPut]
     [Route("{id}")]
     public async Task<IActionResult> UpdateCompanyAsync(int id, [FromBody] UpdateCompanyDTO? updateCompanyRequest)
     {
-        if (updateCompanyRequest == null)
+        if (updateCompanyRequest is null)
         {
             Log.Information("UpdateCompany request is null for ID {Id}", id);
             return BadRequest("Request body cannot be null");
@@ -102,6 +107,11 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         {
             Log.Information("Invalid Isin error during update: {Message}", ex.Message);
             return BadRequest(new { message = ex.Message });
+        }
+        catch (ValidationException ex)
+        {
+            Log.Information("Validation error during update: {Message}", ex.Message);
+            return BadRequest(new { message = ex.Message, Errors = ex.Errors });
         }
     }
 }

@@ -5,7 +5,7 @@ using Domain.Entities;
 
 namespace Tests.Integration;
 
-[Trait("Category", "e2e")]
+[Trait("Category", "Api")]
 [Trait("Category", "Integration")]
 public class CompanyControllerTests : IClassFixture<CompanyApiTestFactory>
 {
@@ -81,6 +81,7 @@ public class CompanyControllerTests : IClassFixture<CompanyApiTestFactory>
         Assert.Equal("US0378331005", company.Isin);
     }
 
+
     [Fact]
     public async Task GetCompanyByIsin_ReturnsNotFound_WhenCompanyDoesNotExist()
     {
@@ -109,6 +110,28 @@ public class CompanyControllerTests : IClassFixture<CompanyApiTestFactory>
         Assert.NotEqual(0, companyId);
 
         Assert.NotEqual(0, companyId);
+    }
+
+
+    [Fact]
+    public async Task CreateCompany_NoData_ReturnsBadRequest()
+    {
+        var response = await _client.PostAsync("/api/companies", null);
+
+        Assert.NotNull(response);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateCompany_EmptyData_ReturnsBadRequest()
+    {
+        var newCompany = new CreateCompanyDTO("", "", "", "", "");
+
+        var content = new StringContent(JsonSerializer.Serialize(newCompany), System.Text.Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync("/api/companies", content);
+
+        Assert.NotNull(response);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -149,6 +172,27 @@ public class CompanyControllerTests : IClassFixture<CompanyApiTestFactory>
 
         Assert.NotNull(response);
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateCompany_NoData_ReturnsBadRequest()
+    {
+        var response = await _client.PutAsync("/api/companies/1", null);
+
+        Assert.NotNull(response);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateCompany_EmptyData_ReturnsBadRequest()
+    {
+        var newCompany = new CreateCompanyDTO("", "", "", "", "");
+
+        var content = new StringContent(JsonSerializer.Serialize(newCompany), System.Text.Encoding.UTF8, "application/json");
+        var response = await _client.PutAsync("/api/companies/1", content);
+
+        Assert.NotNull(response);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
