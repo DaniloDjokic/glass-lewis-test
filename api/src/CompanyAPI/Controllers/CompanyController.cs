@@ -53,7 +53,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         if (createCompanyRequest == null)
         {
             Log.Information("CreateCompany request is null");
-            throw new ArgumentNullException(nameof(createCompanyRequest));
+            return BadRequest("Request body cannot be null");
         }
 
         try
@@ -80,7 +80,7 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         if (updateCompanyRequest == null)
         {
             Log.Information("UpdateCompany request is null for ID {Id}", id);
-            throw new ArgumentNullException(nameof(updateCompanyRequest));
+            return BadRequest("Request body cannot be null");
         }
 
         try
