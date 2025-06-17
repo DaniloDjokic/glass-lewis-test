@@ -11,7 +11,7 @@ public class CompanyRepository(ApplicationDbContext dbContext) : ICompanyReposit
     {
         return await dbContext.Companies
             .Select(c => CompanyDTO.FromEntity(c))
-			.AsNoTracking()
+            .AsNoTracking()
             .ToListAsync();
     }
 
@@ -55,7 +55,12 @@ public class CompanyRepository(ApplicationDbContext dbContext) : ICompanyReposit
     {
         var company = await dbContext.Companies.FindAsync(id);
 
-        company = UpdateCompanyDTO.ToEntity(dto);
+        if (company == null)
+        {
+            throw new KeyNotFoundException($"Company with ID {id} not found.");
+        }
+
+        dto.MapCompany(company);
 
         dbContext.Companies.Update(company);
         await dbContext.SaveChangesAsync();

@@ -170,4 +170,19 @@ public class CompanyRepositoryTests : IntegrationTestBase<ApplicationDbContext>
         var updatedCompany = await _companyRepository.GetCompanyByIdAsync(existingCompany.Id);
         Assert.Equal("Updated Company Name", existingCompanyDto.Name);
     }
+
+    [Fact]
+    public async Task UpdateCompany_NonExistentCompany_ThrowsKeyNotFoundException()
+    {
+        var nonExistentCompanyId = 999;
+        var updateDto = new Application.DTOs.UpdateCompanyDTO(
+            Name: "Non Existent Company",
+            Exchange: "NASDAQ",
+            Ticker: "NEC",
+            Isin: "US0000000000",
+            WebsiteUrl: "https://www.nonexistent.com"
+        );
+
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => _companyRepository.UpdateCompanyAsync(nonExistentCompanyId, updateDto));
+    }
 }

@@ -50,7 +50,7 @@ public class CompanyMappingTests
     }
 
     [Fact]
-    public void UpdateCompanyDTO_ToEntity_MapsProperly()
+    public void UpdateCompanyDto_MapCompany_MapsCompanyProperly()
     {
         var updateCompanyDto = new UpdateCompanyDTO(
             "Updated Company",
@@ -69,7 +69,7 @@ public class CompanyMappingTests
             WebsiteUrl = "https://www.updatedcompany.com"
         };
 
-        var mappedCompany = UpdateCompanyDTO.ToEntity(updateCompanyDto);
+        updateCompanyDto.MapCompany(company);
 
         Assert.Equal(updateCompanyDto.Name, company.Name);
         Assert.Equal(updateCompanyDto.Exchange, company.Exchange);
