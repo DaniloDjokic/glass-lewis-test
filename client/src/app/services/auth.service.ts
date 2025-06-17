@@ -17,7 +17,7 @@ export interface LoginResponse {
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
-  private tokenSubject = new BehaviorSubject<string | null>(this.getStoredToken());
+  private tokenSubject = new BehaviorSubject<string | null>(null);
   public token$ = this.tokenSubject.asObservable();
 
   constructor(

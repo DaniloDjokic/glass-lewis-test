@@ -55,7 +55,7 @@
   <!-- Add/Edit Form -->
   <mat-card *ngIf="showForm" class="form-card">
     <mat-card-header>
-      <mat-card-title>{{ isEditing ? 'Edit Company' : 'Add New Company' }}</mat-card-title>
+      <mat-card-title class="formTitle">{{ isEditing ? 'Edit Company' : 'Add New Company' }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <form #companyForm="ngForm" (ngSubmit)="onSave()">

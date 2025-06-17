@@ -18,15 +18,27 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {
+    const storedToken = localStorage.getItem('auth_token');
+    if (storedToken) {
+      console.log('Clearing potentially stale token on app construction');
+      localStorage.removeItem('auth_token');
+    }
+  }
 
   ngOnInit() {
     this.authService.token$.subscribe(token => {
       this.isAuthenticated = !!token;
       this.isLoading = false;
 
-      if (!token && this.router.url !== '/login') {
-        this.router.navigate(['/login']);
+      if (token) {
+        if (this.router.url === '/login' || this.router.url === '/') {
+          this.router.navigate(['/companies']);
+        }
+      } else {
+        if (this.router.url !== '/login') {
+          this.router.navigate(['/login']);
+        }
       }
     });
   }

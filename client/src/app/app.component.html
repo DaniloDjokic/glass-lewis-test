@@ -5,8 +5,10 @@
       <button (click)="logout()" class="logout-button">Logout</button>
     </nav>
   </header>
-
   <main class="app-main">
-    <router-outlet></router-outlet>
+    <div *ngIf="isLoading" class="loading-spinner">
+      Loading...
+    </div>
+    <router-outlet *ngIf="!isLoading"></router-outlet>
   </main>
 </div>
