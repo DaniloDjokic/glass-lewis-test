@@ -13,14 +13,16 @@ builder.Services.AddCors(options =>
         policy =>
         {
             // policy.WithOrigins(builder.Configuration["ClientUrl"] ?? throw new InvalidOperationException("ClientUrl is not configured."))
-            policy.WithOrigins("http://localhost:4200")
-           .AllowAnyHeader()
-           .AllowAnyMethod()
-           .AllowCredentials();
+            policy.WithOrigins("http://localhost:8081")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
         });
 });
 
 var app = builder.Build();
+
+app.UseCors("AllowAngularApp");
 
 AuthServerInitializer.InitializeAuthData(app.Services, app.Configuration);
 
@@ -28,7 +30,6 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
-
 
 app.UseIdentityServer();
 app.MapGet("/", () => "IdentityServer is running!");

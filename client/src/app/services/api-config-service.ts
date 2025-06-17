@@ -4,21 +4,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ApiConfigService {
-  private readonly baseUrl = 'http://localhost:5202/api';
+  private baseUrl = 'API_URL_PLACEHOLDER';
 
-  get apiUrl(): string {
-    return this.baseUrl;
-  }
-
-  getEndpoint(path: string): string {
-    return `${this.baseUrl}/${path}`;
+  get authUrl(): string {
+    return `${this.baseUrl}/api/login`
   }
 
   get companiesUrl(): string {
-    return this.getEndpoint('companies');
-  }
-
-  get loginUrl(): string {
-    return this.getEndpoint('login');
+    return `${this.baseUrl}/api/companies`
   }
 }

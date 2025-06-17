@@ -110,6 +110,13 @@ table {
   text-decoration: underline;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
 .no-data {
   text-align: center;
   padding: 40px 20px;

@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Company } from '../models.company';
 import { CompanyService } from '../services/company';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -29,7 +30,8 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './company-list.html',
   styleUrl: './company-list.css'
@@ -53,16 +55,22 @@ export class CompanyListComponent implements OnInit {
     this.getCompanies();
   }
 
+  loading: boolean = false;
+
   getCompanies(): void {
-    this.companyService.getCompanies()
-      .subscribe({
-        next: companies => {
-          this.companies = companies;
-          this.filteredCompanies = companies;
-          this.showSearchResults = false;
-        },
-        error: (error) => this.handleError(error, 'Failed to load companies')
-      });
+    this.loading = true;
+    this.companyService.getCompanies().subscribe({
+      next: companies => {
+        this.companies = companies;
+        this.filteredCompanies = companies;
+        this.showSearchResults = false;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.handleError(error, 'Failed to load companies');
+        this.loading = false;
+      }
+    });
   }
 
   onSearch(): void {
@@ -227,6 +235,7 @@ export class CompanyListComponent implements OnInit {
   }
 
   private refreshCompanyList(): void {
+    this.loading = true;
     this.companyService.getCompanies().subscribe({
       next: (companies) => {
         this.companies = companies;
@@ -235,8 +244,12 @@ export class CompanyListComponent implements OnInit {
         }
         this.showSuccessMessage('Company created successfully');
         this.cancelForm();
+        this.loading = false;
       },
-      error: (error) => this.handleError(error, 'Error refreshing company list')
+      error: (error) => {
+        this.handleError(error, 'Error refreshing company list');
+        this.loading = false;
+      }
     });
   }
 

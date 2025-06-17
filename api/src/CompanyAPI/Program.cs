@@ -32,7 +32,8 @@ builder.Services.AddCors(options =>
         options.AddPolicy("AllowAngularApp",
             policy =>
             {
-                policy.WithOrigins(builder.Configuration["ClientUrl"] ?? throw new InvalidOperationException("ClientUrl is not configured."))
+                // policy.WithOrigins(builder.Configuration["ClientUrl"] ?? throw new InvalidOperationException("ClientUrl is not configured."))
+                policy.WithOrigins("http://localhost:8081")
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();

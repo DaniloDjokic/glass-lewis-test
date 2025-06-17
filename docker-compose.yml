@@ -9,7 +9,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=companydb;Username=postgres;Password=yourpassword123
       - IdentityServer__Authority=http://auth:8080
-      - ClientUrl=http://frontend:80
+      - Frontend__ClientUrl=http://localhost:8081
     depends_on:
       db:
         condition: service_healthy
@@ -28,6 +28,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=companydb;Username=postgres;Password=yourpassword123
       - Auth__IssuerUri=http://auth:8080
+      - Frontend__ClientUrl=http://localhost:8081
     depends_on:
       db:
         condition: service_healthy
@@ -46,6 +47,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:80"
+    environment:
+      - ApiUrl=http://localhost:8080
     networks:
       - app-network
     depends_on:

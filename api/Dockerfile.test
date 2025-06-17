@@ -13,10 +13,6 @@ COPY Tests/ Tests/
 
 RUN dotnet restore
 
-COPY <<EOF /entrypoint.sh
-#!/bin/bash
-exec dotnet test --no-restore --verbosity minimal  "\$@"
-EOF
-
+RUN printf '#!/bin/bash\nexec dotnet test --no-restore --verbosity minimal "$@"\n' > /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
