@@ -20,7 +20,7 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         if (!response.Success)
         {
-            return BadRequest(response.ErrorMessage);
+            return BadRequest(new { Message = response.ErrorMessage });
         }
 
         return Ok(new { Token = response.Token });

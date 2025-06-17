@@ -15,7 +15,7 @@ public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration co
 
         var tokenUrl = $"{identityServerUrl}/connect/token";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, identityServerUrl)
+        var request = new HttpRequestMessage(HttpMethod.Post, tokenUrl)
         {
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -34,7 +34,7 @@ public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration co
         if (response.IsSuccessStatusCode)
         {
             var responseContent = await response.Content.ReadAsStringAsync();
-            var loginResponse = System.Text.Json.JsonSerializer.Deserialize<AuthServerResponse>(responseContent, new System.Text.Json.JsonSerializerOptions
+            var loginResponse = System.Text.Json.JsonSerializer.Deserialize<AuthServerSuccessResponse>(responseContent, new System.Text.Json.JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
@@ -50,10 +50,16 @@ public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration co
         }
         else
         {
-            logger.LogError("Login failed for user {Username}. Status code: {StatusCode}, Reason: {Reason}",
-                loginRequest.Username, response.StatusCode, response.ReasonPhrase);
+            var errContent = await response.Content.ReadAsStringAsync();
+            var errResponse = System.Text.Json.JsonSerializer.Deserialize<AuthServerErrorResponse>(errContent, new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
-            return new UserLoginResponseDTO(false, "Login failed: ", response.ReasonPhrase);
+            logger.LogError("Login failed for user {Username}. Status code: {StatusCode}, Error: {Error}, Error Description: {ErrorDescription}",
+                loginRequest.Username, response.StatusCode, errResponse?.Error, errResponse?.ErrorDescription);
+
+            return new UserLoginResponseDTO(false, "Login failed: ", errResponse?.ErrorDescription ?? "Unknown error");
         }
     }
 }
