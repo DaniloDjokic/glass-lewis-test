@@ -11,7 +11,7 @@ public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration co
     {
         logger.LogInformation("Attempting to log in user: {Username}", loginRequest.Username);
 
-        var identityServerUrl = configuration["IdentityServer:Authority"] ?? throw new InvalidOperationException("IdentityServer URL is not configured.");
+        var identityServerUrl = configuration["IdentityServer:Authority"] ?? throw new ArgumentNullException("IdentityServer URL is not configured.");
 
         var tokenUrl = $"{identityServerUrl}/connect/token";
 
@@ -19,12 +19,12 @@ public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration co
         {
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                { "grant_type", configuration["IdentityServer:GrantType"] ?? throw new InvalidOperationException("Grant type is not configured.") },
+                { "grant_type", configuration["IdentityServer:GrantType"] ?? throw new ArgumentNullException("Grant type is not configured.") },
                 { "username", loginRequest.Username },
                 { "password", loginRequest.Password },
-                { "client_id", configuration["IdentityServer:ClientId"] ?? throw new InvalidOperationException("Client ID is not configured.") },
-                { "client_secret", configuration["IdentityServer:ClientSecret"] ?? throw new InvalidOperationException("Client secret is not configured.") },
-                { "scope", configuration["IdentityServer:Scope"] ?? throw new InvalidOperationException("Scope is not configured.") }
+                { "client_id", configuration["IdentityServer:ClientId"] ?? throw new ArgumentNullException("Client ID is not configured.") },
+                { "client_secret", configuration["IdentityServer:ClientSecret"] ?? throw new ArgumentNullException("Client secret is not configured.") },
+                { "scope", configuration["IdentityServer:Scope"] ?? throw new ArgumentNullException("Scope is not configured.") }
             })
         };
 
@@ -41,9 +41,7 @@ public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration co
 
             if (loginResponse is null)
             {
-                logger.LogError("Deserialization of login response failed. {content}", responseContent);
-
-                throw new InvalidOperationException("Failed to deserialize login response.");
+                throw new ArgumentNullException("Login response is null. Please check the IdentityServer configuration.");
             }
 
             return new UserLoginResponseDTO(true, loginResponse.AccessToken, string.Empty);
@@ -59,7 +57,7 @@ public class AuthService(IHttpClientFactory httpClientFactory, IConfiguration co
             logger.LogError("Login failed for user {Username}. Status code: {StatusCode}, Error: {Error}, Error Description: {ErrorDescription}",
                 loginRequest.Username, response.StatusCode, errResponse?.Error, errResponse?.ErrorDescription);
 
-            return new UserLoginResponseDTO(false, "Login failed: ", errResponse?.ErrorDescription ?? "Unknown error");
+            return new UserLoginResponseDTO(false, "", $"Login failed: {errResponse?.ErrorDescription ?? "Unknown error"}");
         }
     }
 }

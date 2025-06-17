@@ -11,6 +11,7 @@ public class CompanyRepository(ApplicationDbContext dbContext) : ICompanyReposit
     {
         return await dbContext.Companies
             .Select(c => CompanyDTO.FromEntity(c))
+			.AsNoTracking()
             .ToListAsync();
     }
 
