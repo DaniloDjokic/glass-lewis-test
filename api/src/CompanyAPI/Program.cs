@@ -1,4 +1,5 @@
 using Application;
+using Application.Extensions;
 using CompanyApi;
 using Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
@@ -15,7 +16,8 @@ builder.Host.UseSerilog();
 
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+
+OpenApiExtensions.AddOpenApi(builder.Services);
 
 if (!builder.Environment.IsEnvironment("Testing"))
 {
@@ -43,11 +45,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("AllowAngularApp");
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+OpenApiExtensions.MapOpenApi(app);
 
 try
 {
