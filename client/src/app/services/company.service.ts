@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Company } from '../models.company';
-import { ApiConfigService } from './api-config-service';
+import { ApiConfigService } from './api.config.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { ApiConfigService } from './api-config-service';
+import { ApiConfigService } from './api.config.service';
 
 export interface LoginRequest {
   username: string;

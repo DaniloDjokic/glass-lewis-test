@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router } from '@angular/router';
-import { AuthService } from './services/auth-service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,7 @@ import { AuthService } from './services/auth-service';
 export class AppComponent implements OnInit {
   title = 'Glass Lewis Company Management';
   isAuthenticated = false;
+  isLoading = true;
 
   constructor(
     private authService: AuthService,
@@ -22,7 +23,9 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.authService.token$.subscribe(token => {
       this.isAuthenticated = !!token;
-      if (!token && !this.router.url.includes('/login')) {
+      this.isLoading = false;
+
+      if (!token && this.router.url !== '/login') {
         this.router.navigate(['/login']);
       }
     });

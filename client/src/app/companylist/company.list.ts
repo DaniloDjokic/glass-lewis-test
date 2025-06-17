@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Company } from '../models.company';
-import { CompanyService } from '../services/company';
+import { CompanyService } from '../services/company.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -33,8 +33,8 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatSelectModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './company-list.html',
-  styleUrl: './company-list.css'
+  templateUrl: './company.list.html',
+  styleUrl: './company.list.css'
 })
 export class CompanyListComponent implements OnInit {
   companies: Company[] = [];
@@ -44,7 +44,6 @@ export class CompanyListComponent implements OnInit {
   isEditing = false;
   currentCompany: Company = this.initializeCompany();
 
-  // Search properties
   searchType: string = 'all';
   searchValue: string = '';
   showSearchResults = false;
@@ -178,6 +177,7 @@ export class CompanyListComponent implements OnInit {
           if (index !== -1) {
             this.companies[index] = { ...this.currentCompany };
             this.companies = [...this.companies];
+
             // Update filtered results if currently showing search results
             if (this.showSearchResults) {
               const filteredIndex = this.filteredCompanies.findIndex(c => c.id === this.currentCompany.id);

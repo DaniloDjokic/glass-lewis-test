@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login';
-import { CompanyListComponent } from './company-list/company-list';
-import { authGuard } from './guards/auth-guard';
+import { CompanyListComponent } from './companylist/company.list';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -10,6 +10,6 @@ export const routes: Routes = [
     component: CompanyListComponent,
     canActivate: [authGuard]
   },
-  { path: '', redirectTo: '/companies', pathMatch: 'full' },
-  { path: '**', redirectTo: '/companies' }
+  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Changed this
+  { path: '**', redirectTo: '/login' } // Changed this
 ];
