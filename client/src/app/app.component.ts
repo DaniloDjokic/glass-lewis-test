@@ -21,7 +21,6 @@ export class AppComponent implements OnInit {
   ) {
     const storedToken = localStorage.getItem('auth_token');
     if (storedToken) {
-      console.log('Clearing potentially stale token on app construction');
       localStorage.removeItem('auth_token');
     }
   }

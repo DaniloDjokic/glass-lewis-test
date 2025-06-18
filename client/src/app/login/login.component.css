@@ -107,3 +107,16 @@ label {
   background-color: #6c757d;
   cursor: not-allowed;
 }
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.loading-text {
+  color: #666;
+  font-size: 14px;
+}
