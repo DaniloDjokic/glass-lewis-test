@@ -43,7 +43,8 @@ Once Docker compose completes the startup process the services will be available
 The Web API comes built in with an API explorer that can be used to test the various API endpoints. 
 It is available at `http://localhost:8080/scalar/v1` and looks like this:
 
-![api-explorer](https://github.com/user-attachments/assets/78eaeb4f-2cdc-48c6-94da-7944d416c526)
+![scalar](https://github.com/user-attachments/assets/15628400-96d6-437f-b230-6f4ba9a0cee1)
+
 
 Since the API is protected by JWT authentication you will need a bearer token to properly explore the endpoints. You can get one using the following command:
 
@@ -53,7 +54,7 @@ Since the API is protected by JWT authentication you will need a bearer token to
 
 Upon visiting `http://localhost:8081` you will be presented with a login screen:
 
-![login](https://github.com/user-attachments/assets/284557ce-f7eb-4594-9308-88eb425b2196)
+![login](https://github.com/user-attachments/assets/f4002d99-997b-4859-beaa-07e62ad20816)
 
 The authentication configuration is seeded with a test user that you can use to login:
 
@@ -62,7 +63,7 @@ The authentication configuration is seeded with a test user that you can use to 
 
 Once logged in, you will be presented with a company listing screen
 
-![client](https://github.com/user-attachments/assets/333ce0c1-c144-4ca3-ae71-d08c848add32)
+![companylist](https://github.com/user-attachments/assets/ca6db06f-4f64-4695-b92b-63589e766471)
 
 Here you can interact with the companies in the database by:
 
@@ -115,7 +116,7 @@ Then, run the command to convert the xml output into a human readable format wit
 
 Once the command successfully runs, you can open the generated code coverage file. It is locates in `coveragereport/index.htm` and looks something like this:
 
-![code-coverage](https://github.com/user-attachments/assets/4fdb3ba8-a34d-48b3-9cff-3bc55e40d702)
+![codecoverage](https://github.com/user-attachments/assets/d4d9fc93-6115-4ce2-8fff-bdf8ad396ba1)
 
 # Production considerations
 
