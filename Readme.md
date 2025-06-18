@@ -103,7 +103,7 @@ First, install the dotnet coverage tool:
 Then, install the report generation tool:
 `dotnet tool install --global dotnet-reportgenerator-globaltool`
 
-Run the following command in order to collect code coverage information about the tests
+Run the following command inside the /api directory in order to collect code coverage information about the tests
 
 `dotnet-coverage collect "dotnet test" --output coverage.cobertura.xml --output-format cobertura`
 
