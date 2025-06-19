@@ -59,7 +59,7 @@ Upon visiting `http://localhost:8081` you will be presented with a login screen:
 The authentication configuration is seeded with a test user that you can use to login:
 
 - Username: Admin
-- Password: SecurePassword123
+- Password: SecurePassword123!
 
 Once logged in, you will be presented with a company listing screen
 
