@@ -57,8 +57,8 @@ Upon visiting `http://localhost:8081` you will be presented with a login screen:
 
 The authentication configuration is seeded with a test user that you can use to login:
 
-- Username: admin
-- Password: admin
+- Username: Admin
+- Password: SecurePassword123
 
 Once logged in, you will be presented with a company listing screen
 
@@ -125,7 +125,7 @@ This solution, while robust, is very much **not** production ready. Some things 
 - **Protection of signing keys**: Currently, the identity server configuration uses developer signing credentials to sign JWT tokens. For production we could use something like *Azure Key Vault* to safely store these signing keys
 - **Load testing**: The API has not been load tested. We could use something like *Bogus* to load the database with a bunch of dummy data and load test the endpoints with *K6*
 - **CI/CD** For production we would need a proper CI/CD pipeline that can run tests and make it easier to make changes
-- API Rate limiting and throttling
-- Enable audit logging for authentication events
-- Setting up automated database backups
-- Implementing caching strategies for heavy read operations that are frequently executed using something like *Redis*
+- **API Rate limiting** and throttling
+- **Audit logging** for authentication events
+- **Automated database backups**
+- **Caching strategies** for heavy read operations that are frequently executed using something like *Redis*
